@@ -12,6 +12,7 @@ Patch0: 	chbg-2.0.1-composite.patch.bz2
 URL:		http://www.beebgames.com/sw/gtk-ports.html
 License:	GPL
 Group:		Graphics
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel
 
