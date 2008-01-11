@@ -49,16 +49,6 @@ install -m 644 %{SOURCE2} %buildroot%{_iconsdir}/%{name}.png
 install -m 644 %{SOURCE3} %buildroot%{_liconsdir}/%{name}.png
 
 # menu stuff
-mkdir -p %buildroot%{_menudir}
-cat << EOF > %buildroot%{_menudir}/%{name}
-?package(%{name}):\
-    command="%{_bindir}/%{name}" \
-    needs="x11" \
-    icon="%{name}.png" \
-    section="System/Configuration/Other" \
-    title="ChBg" \
-    longtitle="%{Summary}" xdg="true"
-EOF
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
 cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
@@ -93,7 +83,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS BUGS ChangeLog README THANKS TODO chbgrc.sample xscreensaver*txt 
 %{_bindir}/chbg
 %_datadir/applications/mandriva*
-%{_menudir}/%{name}
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
 %{_liconsdir}/%{name}.png
