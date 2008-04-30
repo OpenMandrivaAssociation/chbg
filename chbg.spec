@@ -1,20 +1,20 @@
 %define Summary ChBg - Desktop background manager/changer/screensaver
-Summary:	%Summary
+Summary:	Desktop background manager/changer/screensaver
 Name:		chbg
 Version:	2.0.1
-Release:	%mkrel 5
+Release:	%mkrel 6
+License:	GPLv2+
+Group:		Graphics
+URL:		http://www.beebgames.com/sw/gtk-ports.html
 Source0:	http://www.beebgames.com/sw/%{name}-%{version}.tar.bz2
 Source1:	%{name}_16x16.png
 Source2:	%{name}_32x32.png
 Source3:	%{name}_48x48.png
 # (fc) 2.0.1-3mdv use correct depth with composite
-Patch0: 	chbg-2.0.1-composite.patch.bz2
-URL:		http://www.beebgames.com/sw/gtk-ports.html
-License:	GPL
-Group:		Graphics
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+Patch0:		chbg-2.0.1-composite.patch
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 ChBg is for changing desktop backgrounds in a given period. It can
@@ -32,30 +32,31 @@ thumbnail previews.
 %patch0 -p1 -b .composite
 
 %build
-%configure2_5x --with-intl-includes=%{_datadir}/gettext/intl \
+%configure2_5x \
+    --with-intl-includes=%{_datadir}/gettext/intl \
     --x-libraries="-lz"
 
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %makeinstall_std
 
 # install icons
-mkdir -p %buildroot{%{_miconsdir},%{_iconsdir},%{_liconsdir}}
-install -m 644 %{SOURCE1} %buildroot%{_miconsdir}/%{name}.png
-install -m 644 %{SOURCE2} %buildroot%{_iconsdir}/%{name}.png
-install -m 644 %{SOURCE3} %buildroot%{_liconsdir}/%{name}.png
+mkdir -p %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48}/apps
+install -m 644 %{SOURCE1} %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
+install -m 644 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+install -m 644 %{SOURCE3} %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 
 # menu stuff
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/%{name}.desktop << EOF
 [Desktop Entry]
 Name=ChBg
-Comment=%Summary
+Comment=%{Summary}
 Exec=%{name}
-Icon=%name
+Icon=%{name}
 Terminal=false
 Type=Application
 StartupNotify=true
@@ -64,27 +65,27 @@ EOF
 
 
 # touch the default sysconfig file so that it can be included
-mkdir -p %buildroot%{_sysconfdir}
-touch %buildroot%{_sysconfdir}/chbgrc
+mkdir -p %{buildroot}%{_sysconfdir}
+touch %{buildroot}%{_sysconfdir}/chbgrc
 
 %{find_lang} %{name}
 
 %post
 %{update_menus}
+%update_icon_cache hicolor
 
 %postun
 %{clean_menus}
+%clean_icon_cache hicolor
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -f %{name}.lang
 %defattr(-,root,root)
 %doc AUTHORS BUGS ChangeLog README THANKS TODO chbgrc.sample xscreensaver*txt 
 %{_bindir}/chbg
-%_datadir/applications/mandriva*
-%{_iconsdir}/%{name}.png
-%{_miconsdir}/%{name}.png
-%{_liconsdir}/%{name}.png
+%{_datadir}/applications/*.desktop
+%{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_mandir}/man*/*
 %attr(644,root,root) %config(noreplace,missingok) %{_sysconfdir}/chbgrc
