@@ -2,7 +2,7 @@
 Summary:	Desktop background manager/changer/screensaver
 Name:		chbg
 Version:	2.0.1
-Release:	%mkrel 6
+Release:	%mkrel 7
 License:	GPLv2+
 Group:		Graphics
 URL:		http://www.beebgames.com/sw/gtk-ports.html
