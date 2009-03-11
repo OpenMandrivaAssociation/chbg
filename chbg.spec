@@ -2,7 +2,7 @@
 Summary:	Desktop background manager/changer/screensaver
 Name:		chbg
 Version:	2.0.1
-Release:	%mkrel 8
+Release:	%mkrel 9
 License:	GPLv2+
 Group:		Graphics
 URL:		http://www.beebgames.com/sw/gtk-ports.html
@@ -10,8 +10,10 @@ Source0:	http://www.beebgames.com/sw/%{name}-%{version}.tar.bz2
 Source1:	%{name}_16x16.png
 Source2:	%{name}_32x32.png
 Source3:	%{name}_48x48.png
-# (fc) 2.0.1-3mdv use correct depth with composite
-Patch0:		chbg-2.0.1-composite.patch
+# (fc) 2.0.1-3mdv use correct colormap / depth 
+Patch0:		chbg-2.0.1-colormap.patch
+# (fc) 2.0.1-9mdv fix CFLAGS
+Patch1:		chbg-2.0.1-cflags.patch
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -30,6 +32,10 @@ thumbnail previews.
 %prep
 %setup -q
 %patch0 -p1 -b .composite
+%patch1 -p1 -b .cflags
+
+#needed by patch1
+autoreconf -i
 
 %build
 %configure2_5x \
