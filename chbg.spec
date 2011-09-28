@@ -1,8 +1,9 @@
 %define Summary ChBg - Desktop background manager/changer/screensaver
+
 Summary:	Desktop background manager/changer/screensaver
 Name:		chbg
 Version:	2.0.1
-Release:	%mkrel 13
+Release:	%mkrel 14
 License:	GPLv2+
 Group:		Graphics
 URL:		http://www.beebgames.com/sw/gtk-ports.html
@@ -14,6 +15,7 @@ Source3:	%{name}_48x48.png
 Patch0:		chbg-2.0.1-colormap.patch
 # (fc) 2.0.1-9mdv fix CFLAGS
 Patch1:		chbg-2.0.1-cflags.patch
+Patch2:		chbg-2.0.1-libpng1.5.patch
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
@@ -33,6 +35,7 @@ thumbnail previews.
 %setup -q
 %patch0 -p1 -b .composite
 %patch1 -p1 -b .cflags
+%patch2 -p0 -b .png
 
 #needed by patch1
 autoreconf -i
