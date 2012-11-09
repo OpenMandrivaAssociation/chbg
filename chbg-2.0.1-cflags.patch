@@ -1,0 +1,39 @@
+From 872e8f856e0e48368f170fe94d6e5b2206dabf6e Mon Sep 17 00:00:00 2001
+From: Frederic Crozat <fcrozat@mandriva.com>
+Date: Wed, 11 Mar 2009 15:56:20 +0100
+Subject: [PATCH] Fix CFLAGS
+
+---
+ configure.in    |    2 --
+ src/Makefile.am |    2 ++
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 2487f2b..9c2eaca 100644
+--- a/configure.in
++++ b/configure.in
+@@ -113,8 +113,6 @@ if eval "test x$WITH_E = xyes";then
+ 	CHBG_CFLAGS="-DHAVE_ENLIGHTENMENT_SUPPORT $CHBG_CFLAGS"
+ fi
+ 
+-CFLAGS="$CHBG_CFLAGS"
+-
+ AC_SUBST(LIBS)
+ AC_SUBST(MSUBDIRS)
+ AC_SUBST(GNOME_PREFIX)
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 210f090..14a2a22 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -18,6 +18,8 @@ EXTRA_DIST = header \
+ 
+ DISTCLEANFILES = chbg.pot
+ 
++INCLUDES = @CHBG_CFLAGS@
++
+ bin_PROGRAMS = chbg
+ 
+ chbg_SOURCES = \
+-- 
+1.6.1.3
+

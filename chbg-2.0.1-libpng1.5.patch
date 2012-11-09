@@ -1,0 +1,11 @@
+--- src/absimg.c.libpng	2011-09-14 04:41:50.000000000 +0200
++++ src/absimg.c	2011-09-14 04:43:57.000000000 +0200
+@@ -96,7 +96,7 @@
+ 	
+ 	pngi = png_create_info_struct(pngw);
+ 	
+-	if (setjmp(pngw->jmpbuf))
++	if (setjmp(png_jmpbuf(pngw)))
+ 	{
+ 		png_destroy_write_struct(&pngw, &pngi);
+ 		fclose(f);

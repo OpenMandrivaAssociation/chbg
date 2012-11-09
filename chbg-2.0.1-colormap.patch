@@ -1,0 +1,205 @@
+From a83d0c0e4f7d8f5997faa060a33ea694766a3cec Mon Sep 17 00:00:00 2001
+From: Frederic Crozat <fcrozat@mandriva.com>
+Date: Wed, 11 Mar 2009 09:32:26 +0000
+Subject: [PATCH 1/2] Fix colormap
+
+---
+ src/absimg_gdkpixbuf.c |    4 ++--
+ src/chbg.c             |   20 ++++++++++----------
+ src/gimpgradient.c     |    2 +-
+ src/gui_tools.c        |    2 +-
+ src/shaderpv.c         |    6 +++---
+ src/thumb.c            |    4 ++--
+ 6 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/src/absimg_gdkpixbuf.c b/src/absimg_gdkpixbuf.c
+index fe63a82..031c536 100644
+--- a/src/absimg_gdkpixbuf.c
++++ b/src/absimg_gdkpixbuf.c
+@@ -118,8 +118,8 @@ gint height;
+ 		gdk_pixbuf_ref(image->image);
+ 	}
+ 
+-	pixmap = gdk_pixmap_new(GDK_ROOT_PARENT(), width, height,
+-                                    gdk_visual_get_best_depth());
++	pixmap = gdk_pixmap_new(gdk_get_default_root_window(), width, height,
++                                    gdk_drawable_get_depth(gdk_get_default_root_window()));
+ 
+ 	gdk_pixbuf_render_to_drawable(temp, pixmap , gc ,
+ 			0, 0, 0, 0, width, height, GDK_RGB_DITHER_MAX, 1, 1);
+diff --git a/src/chbg.c b/src/chbg.c
+index ca61cdd..d6544d5 100644
+--- a/src/chbg.c
++++ b/src/chbg.c
+@@ -788,7 +788,7 @@ guint h;
+ 		else
+ 		{
+ 			pixmap = gdk_pixmap_new(root_window, rw, rh,
+-					gdk_visual_get_best_depth());
++					gdk_drawable_get_depth(root_window));
+ 
+ 			gdk_draw_rgb_image(pixmap, gc, 0, 0,
+ 				shbuf->width, shbuf->height,
+@@ -803,7 +803,7 @@ guint h;
+ 		if (prop->shade)
+ 		{
+ 			pixmap = gdk_pixmap_new(root_window, rw, rh,
+-					gdk_visual_get_best_depth());
++					gdk_drawable_get_depth(root_window));
+ 			gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, rw, rh);
+ 			shader_shade_pixmap(prop, pixmap, gc, rw, rh, TRUE,
+ 				NULL, NULL);
+@@ -811,7 +811,7 @@ guint h;
+ 		else
+ 		{
+ 			pixmap = gdk_pixmap_new(root_window, 1, 1,
+-					gdk_visual_get_best_depth());
++					gdk_drawable_get_depth(root_window));
+ 			gdk_draw_point(pixmap, gc, 0, 0);
+ 		}
+ 	}
+@@ -904,7 +904,7 @@ gint isroot;
+ 
+ 
+ 			pixmap = gdk_pixmap_new(*root_window, 2*w, 2*h,
+-				gdk_visual_get_best_depth());
++				gdk_drawable_get_depth (*root_window));
+ 
+ 			gc = gdk_gc_new(*root_window);
+ 			SET_BGCOL(NULL);
+@@ -951,7 +951,7 @@ gint isroot;
+ 				p1 = pixmap;
+ 
+ 				pixmap = gdk_pixmap_new(*root_window, w, h,
+-					gdk_visual_get_best_depth());
++					gdk_drawable_get_depth (*root_window));
+ 
+ 				gdk_draw_pixmap(pixmap, gc, p1,
+ 					0, 0, xof, yof, w-xof, h-yof);
+@@ -988,7 +988,7 @@ gint isroot;
+ 				SET_BGCOL(NULL);
+ 
+ 				pixmap = gdk_pixmap_new(*root_window, rw, rh,
+-					gdk_visual_get_best_depth());
++					gdk_drawable_get_depth(*root_window));
+ 				gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0,
+ 					rw, rh);
+ 
+@@ -1042,7 +1042,7 @@ gint isroot;
+ 				SET_BGCOL(NULL);
+ 
+ 				pixmap = gdk_pixmap_new(*root_window, rw, rh,
+-					gdk_visual_get_best_depth());
++					gdk_drawable_get_depth(*root_window));
+ 
+ 				gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, rw, rh);
+ 
+@@ -1085,7 +1085,7 @@ gint isroot;
+ 			p1 = absimg_render(image, w, h);
+ 
+ 			pixmap = gdk_pixmap_new(*root_window, w, h,
+-				gdk_visual_get_best_depth());
++				gdk_drawable_get_depth(*root_window));
+ 
+ 			gdk_draw_pixmap(pixmap, gc, p1,
+ 				0, 0, xof, yof, w-xof, h-yof);
+@@ -1138,7 +1138,7 @@ gint isroot;
+ 			p1 = absimg_render(image, w, h);
+ 
+ 			pixmap = gdk_pixmap_new(*root_window, w, h,
+-				gdk_visual_get_best_depth());
++				gdk_drawable_get_depth(*root_window));
+ 
+ 			gdk_draw_pixmap(pixmap, gc, p1,
+ 				0, 0, xof, yof, w-xof, h-yof);
+@@ -1183,7 +1183,7 @@ gint isroot;
+ 
+ 		pixmap = gdk_pixmap_new(*root_window,
+ 			shbuf->width, shbuf->height,
+-			gdk_visual_get_best_depth());
++			gdk_drawable_get_depth(*root_window));
+ 
+ 		gdk_draw_rgb_image(pixmap, gc, 0, 0,
+ 			shbuf->width, shbuf->height,
+diff --git a/src/gimpgradient.c b/src/gimpgradient.c
+index 030208a..b7bb724 100644
+--- a/src/gimpgradient.c
++++ b/src/gimpgradient.c
+@@ -394,7 +394,7 @@ int h;
+ 
+ 	gc = gdk_gc_new(window);
+ 	pixmap = gdk_pixmap_new(window, w, h, 
+-			gdk_visual_get_best_depth());
++			gdk_drawable_get_depth(window));
+ 
+ 	lnbuf = g_malloc(3 * w);
+ 
+diff --git a/src/gui_tools.c b/src/gui_tools.c
+index 4fe4fc4..2703b90 100644
+--- a/src/gui_tools.c
++++ b/src/gui_tools.c
+@@ -358,7 +358,7 @@ guitl_picsel_t *picsel;
+ 		gtk_widget_ensure_style(pmap);
+ 		gdk_gc_set_foreground(gc, &(pmap->style->bg[GTK_STATE_NORMAL]));
+ 		pixmap = gdk_pixmap_new(GDK_ROOT_PARENT(), w, h,
+-                        gdk_visual_get_best_depth());
++                        gdk_drawable_get_depth(GDK_ROOT_PARENT()));
+ 		gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, w, h);
+ 		absimg_render_alpha_to_pixmap(pixmap, img, w, h);
+ 		gdk_gc_unref(gc);
+diff --git a/src/shaderpv.c b/src/shaderpv.c
+index 26e4477..d1a5f24 100644
+--- a/src/shaderpv.c
++++ b/src/shaderpv.c
+@@ -88,7 +88,7 @@ shaderdlg_info *info;
+ 
+ 		gc = gdk_gc_new(info->pv->window);
+ 		pmap = gdk_pixmap_new(info->pv->window, w, h,
+-			gdk_visual_get_best_depth());
++			gdk_drawable_get_depth(gtk_widget_get_root_window (info->pv->window)));
+ 
+ 		prop.shade = rinfo->shadernr;
+ 		prop.tile = rinfo->tile;
+@@ -229,7 +229,7 @@ shaderdlg_info *info;
+ 
+ 		gc = gdk_gc_new(root_window);
+ 		pmap = gdk_pixmap_new(root_window, w, h,
+-			gdk_visual_get_best_depth());
++			gdk_drawable_get_depth(root_window));
+ 
+ 		prop.shade = rinfo->shadernr;
+ 		prop.tile = rinfo->tile;
+@@ -585,7 +585,7 @@ shaderdlg_info *info;
+ 		gtk_widget_show(box);
+ 
+ 		prop->shade = i;
+-		pmap = gdk_pixmap_new(toplevel_window->window, 70, 70, gdk_visual_get_best_depth());
++		pmap = gdk_pixmap_new(toplevel_window->window, 70, 70, gtk_widget_get_root_window(toplevel_window->window));
+ 		sinfo.load = FALSE;
+ 		shader_shade_pixmap(prop, pmap, gc, 70, 70, FALSE, &sinfo, NULL);
+ 		sinfo.load = TRUE;
+diff --git a/src/thumb.c b/src/thumb.c
+index 5ee8042..3e3b7f3 100644
+--- a/src/thumb.c
++++ b/src/thumb.c
+@@ -342,7 +342,7 @@ double sadd;
+ 
+ 		pixmap = gdk_pixmap_new(GDK_ROOT_PARENT(),
+ 			info->curr_width, info->curr_height,
+-			gdk_visual_get_best_depth());
++			gdk_drawable_get_depth(GDK_ROOT_PARENT()));
+ 		gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, info->curr_width, info->curr_height);
+ 		absimg_render_alpha_to_pixmap(pixmap, info->curr_absimg, info->curr_width, info->curr_height);
+ 		gdk_gc_unref(gc);
+@@ -1384,7 +1384,7 @@ struct thumbpv_info *info;
+ 				gdk_gc_set_foreground(gc, &(frame->style->bg[GTK_STATE_NORMAL]));
+ 
+ 				pixmap = gdk_pixmap_new(GDK_ROOT_PARENT(),
+-					w, h, gdk_visual_get_best_depth());
++					w, h,gdk_drawable_get_depth (GDK_ROOT_PARENT ()));
+ 				gdk_draw_rectangle(pixmap, gc, TRUE, 0, 0, w, h);
+ 				absimg_render_alpha_to_pixmap(pixmap, img, w, h);
+ 				gdk_gc_unref(gc);
+-- 
+1.6.1.3
+
