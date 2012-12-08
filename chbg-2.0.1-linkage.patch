@@ -1,0 +1,12 @@
+diff -urN chbg-2.0.1/configure.in chbg-2.0.1-patched/configure.in
+--- chbg-2.0.1/configure.in	2006-03-10 07:56:32.000000000 +1000
++++ chbg-2.0.1-patched/configure.in	2012-08-27 23:12:01.776634998 +1100
+@@ -99,7 +100,7 @@
+ AC_CHECK_LIB(png, png_write_info, PNG_LIBS="-lpng", , $Z_LIBS)
+ 
+ CHBG_CFLAGS="$CHBG_CFLAGS $IMLIB_CFLAGS $INTL_CFLAGS -DDEFAULT_SYS_CHBG_RC=\"\\\"\$(sysconfdir)/chbgrc\\\"\""
+-LIBS="$LDFLAGS $IMLIB_LIBS $INTL_LIBS $PNG_LIBS $Z_LIBS $CHBG_LIBS"
++LIBS="$LDFLAGS $IMLIB_LIBS $INTL_LIBS $PNG_LIBS $Z_LIBS $CHBG_LIBS -lm -lX11"
+ 
+ if eval "test x$WITH_ETERM = xyes";then
+ 	CHBG_CFLAGS="-DHAVE_ESETROOT_SUPPORT $CHBG_CFLAGS"
