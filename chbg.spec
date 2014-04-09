@@ -1,7 +1,7 @@
 Summary:	Desktop background manager/changer/screensaver
 Name:		chbg
 Version:	2.0.1
-Release:	23
+Release:	24
 License:	GPLv2+
 Group:		Graphics
 Url:		http://www.beebgames.com/sw/gtk-ports.html
@@ -36,9 +36,8 @@ thumbnail previews.
 autoreconf -i
 
 %build
-%configure2_5x \
-    --with-intl-includes=%{_datadir}/gettext/intl \
-    --x-libraries="-lz"
+%configure2_5x	--with-intl-includes=%{_datadir}/gettext/intl \
+		--x-libraries="-lz"
 
 %make
 
@@ -46,10 +45,9 @@ autoreconf -i
 %makeinstall_std
 
 # install icons
-mkdir -p %{buildroot}%{_iconsdir}/hicolor/{16x16,32x32,48x48}/apps
-install -m 644 %{SOURCE1} %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
-install -m 644 %{SOURCE2} %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
-install -m 644 %{SOURCE3} %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
+install -p -m644 %{SOURCE1} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
+install -p -m644 %{SOURCE2} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+install -p -m644 %{SOURCE3} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 
 # menu stuff
 mkdir -p %{buildroot}%{_datadir}/applications
@@ -79,4 +77,3 @@ touch %{buildroot}%{_sysconfdir}/chbgrc
 %{_datadir}/applications/*.desktop
 %{_iconsdir}/hicolor/*/apps/%{name}.png
 %{_mandir}/man*/*
-
