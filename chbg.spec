@@ -36,7 +36,7 @@ thumbnail previews.
 autoreconf -i
 
 %build
-export CC=gxx
+export CC=gcc
 export CXX=g++
 
 %configure \
