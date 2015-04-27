@@ -1,7 +1,7 @@
 Summary:	Desktop background manager/changer/screensaver
 Name:		chbg
 Version:	2.0.1
-Release:	25
+Release:	26
 License:	GPLv2+
 Group:		Graphics
 Url:		http://www.beebgames.com/sw/gtk-ports.html
@@ -36,8 +36,12 @@ thumbnail previews.
 autoreconf -i
 
 %build
-%configure2_5x	--with-intl-includes=%{_datadir}/gettext/intl \
-		--x-libraries="-lz"
+export CC=gxx
+export CXX=g++
+
+%configure \
+	--with-intl-includes=%{_datadir}/gettext/intl \
+    --x-libraries="-lz"
 
 %make
 
