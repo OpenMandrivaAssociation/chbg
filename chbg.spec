@@ -31,7 +31,7 @@ thumbnail previews.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 #needed by patch1 and patch3
 autoreconf -i
 
